@@ -51,7 +51,7 @@ const badges = computed<Badge[]>(() => [
 
 <template>
   <div>
-    <div class="d-flex justify-content-center align-content-center gap-2 mb-1">
+    <div class="d-flex flex-wrap justify-content-center align-content-center column-gap-2 row-gap-0 mb-1">
       <a v-for="badge in badges" :key="badge.name" :href="badge.href" target="_blank">
         <img :alt="badge.name" :src="badge.src" />
       </a>
@@ -63,9 +63,9 @@ const badges = computed<Badge[]>(() => [
         rel="noopener"
       >
         <img
-          id="history"
+          id="star-history"
           alt="Star History Chart"
-          class="w-100"
+          width="100%"
           :src="`https://api.star-history.com/svg?repos=${props.owner}/${props.repo}&type=date&legend=bottom-right&theme=dark`"
         />
       </a>

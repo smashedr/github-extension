@@ -10,7 +10,7 @@ import PermsCheck from '@/components/PermsCheck.vue'
 import BadgesView from '@/components/BadgesView.vue'
 import OptionsForm from '@/components/OptionsForm.vue'
 
-let isBrowser = isFirefox ? '390px' : null
+let isBrowser = isFirefox ? '420px' : null
 const width = computed(() => (isMobile ? '100%' : isBrowser))
 console.log('width:', width.value)
 

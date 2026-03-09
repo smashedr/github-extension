@@ -63,6 +63,15 @@ onMounted(() => {
       </div>
     </div>
 
+    <div class="form-check form-switch">
+      <input class="form-check-input" id="siteIcon" type="checkbox" role="switch" @change="saveOptions" />
+      <label class="form-check-label" for="siteIcon">Show Site Icon</label>
+      <i
+        class="fa-solid fa-circle-info p-1"
+        data-bs-toggle="tooltip"
+        data-bs-title="Show Context Menu on Right Click."
+      ></i>
+    </div>
     <div v-if="!isMobile" class="form-check form-switch">
       <input class="form-check-input" id="contextMenu" type="checkbox" role="switch" @change="saveOptions" />
       <label class="form-check-label" for="contextMenu">Enable Right Click Menu</label>

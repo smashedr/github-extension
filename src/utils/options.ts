@@ -3,6 +3,7 @@ import { showToast } from '@/composables/useToast.ts'
 export const defaultOptions = {
   testInput: 'Default Value',
   testNumber: 60,
+  siteIcon: true,
   contextMenu: true,
   showUpdate: false,
 }

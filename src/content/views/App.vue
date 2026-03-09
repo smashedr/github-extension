@@ -1,13 +1,38 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { getOwnerRepo } from '@/utils/github.ts'
-// import Logo from '@/assets/crx.svg'
+import { getOptions } from '@/utils/options.ts'
+import BadgesView from '@/components/BadgesView.vue'
+// import Logo from '@/assets/logo.svg'
+
+chrome.storage.onChanged.addListener(onChanged)
 
 window.addEventListener('keydown', handleKeyboard)
 
-const show = ref(false)
+const owner = ref('')
+const repo = ref('')
 
-const toggle = () => (show.value = !show.value)
+const showIcon = ref(false)
+const showPopup = ref(false)
+
+const togglePopup = () => (showPopup.value = !showPopup.value)
+const toggleIcon = () => {
+  showIcon.value = !showIcon.value
+  if (!showIcon.value) showPopup.value = false
+}
+
+function onChanged(changes: object, namespace: string) {
+  console.log('onChanged:', changes)
+  // for (const [key, _] of Object.entries(changes)) {
+  for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
+    console.debug('onChanged:', namespace, key)
+    if (namespace === 'sync' && key === 'options') {
+      if (oldValue.siteIcon !== newValue.siteIcon) {
+        showIcon.value = newValue.siteIcon
+      }
+    }
+  }
+}
 
 function handleKeyboard(e: KeyboardEvent) {
   // console.debug('handleKeyboard:', e)
@@ -23,12 +48,13 @@ function handleKeyboard(e: KeyboardEvent) {
     return
   }
   if (['KeyT'].includes(e.code)) {
-    toggle()
+    console.log('Pressed T')
+    togglePopup()
   } else if (['KeyE'].includes(e.code)) {
-    console.log('The E')
+    console.log('Pressed E')
     chrome.runtime.sendMessage('openPopup')
   } else if (['KeyR'].includes(e.code)) {
-    console.log('The R')
+    console.log('Pressed R')
     const result = getOwnerRepo(window.location.href)
     console.log('result:', result)
     if (result) {
@@ -49,20 +75,43 @@ function navigateTo(url: string): void {
   a.click()
   document.body.removeChild(a)
 }
+
+onMounted(() => {
+  // console.debug('onMounted')
+  getOptions().then((options) => {
+    // console.debug('options:', options)
+    if (options.siteIcon) {
+      toggleIcon()
+    }
+    console.log('window.location.href', window.location.href)
+    const result = getOwnerRepo(window.location.href)
+    console.log('result', result)
+    if (result) {
+      owner.value = result.owner
+      repo.value = result.name
+    } else {
+      console.log('no results from getOwnerRepo.')
+    }
+  })
+})
 </script>
 
 <template>
   <div class="popup-container">
-    <div v-show="show" class="popup-content" :class="show ? 'opacity-100' : 'opacity-0'">
-      <h1>Ralf Broke This</h1>
+    <div v-show="showPopup" class="popup-content">
+      <BadgesView v-if="owner && repo" :owner :repo class="badges" />
     </div>
-    <button class="toggle-button" @click="toggle()">
+    <button v-show="showIcon" class="toggle-button" @click="togglePopup()">
       <img src="@/assets/logo.svg" alt="T" class="button-icon" />
     </button>
   </div>
 </template>
 
 <style scoped>
+.badges {
+  max-width: 480px;
+}
+
 .popup-container {
   position: fixed;
   right: 0;
@@ -74,6 +123,8 @@ function navigateTo(url: string): void {
   font-family: ui-sans-serif, system-ui, sans-serif;
   user-select: none;
   line-height: 1em;
+  max-width: calc(100vw - 2.5rem);
+  max-height: calc(100vh - 2.5rem);
 }
 
 .popup-content {
@@ -84,6 +135,9 @@ function navigateTo(url: string): void {
     0 4px 6px -1px rgb(0 0 0 / 0.1),
     0 2px 4px -2px rgb(0 0 0 / 0.1);
   width: max-content;
+  max-width: 100%;
+  max-height: calc(100vh - 2.5rem);
+  overflow: auto;
   height: min-content;
   padding: 0.5rem 1rem;
   margin: auto 0.5rem 0 0;
