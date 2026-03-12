@@ -34,7 +34,7 @@ export default defineManifest(({ mode }) => {
     content_scripts: [
       {
         js: ['src/content/main.ts'],
-        matches: ['*://github.com/*/*'],
+        matches: ['*://github.com/*'],
       },
     ],
     commands: {

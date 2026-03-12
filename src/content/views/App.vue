@@ -58,16 +58,16 @@ function handleKeyboard(e: KeyboardEvent) {
     const result = getOwnerRepo(window.location.href)
     console.log('result:', result)
     if (result) {
-      const url = `${result.url}/releases`
-      console.log('url:', url)
-      // history.pushState(null, '', url)
-      // window.dispatchEvent(new PopStateEvent('popstate', { state: null }))
-      navigateTo(url)
+      navigateTo(`${result.url}/releases`)
     }
+  } else if (e.code === 'KeyH') {
+    console.log('Pressed H') // Old Home
+    navigateTo('https://github.com/feed')
   }
 }
 
 function navigateTo(url: string): void {
+  console.log('navigateTo:', url)
   if (window.location.href === url) return
   const a = document.createElement('a')
   a.href = url
@@ -100,6 +100,7 @@ onMounted(() => {
   <div class="popup-container">
     <div v-show="showPopup" class="popup-content">
       <BadgesView v-if="owner && repo" :owner :repo class="badges" />
+      <div v-else>No Repository Detected. This section is not finished.</div>
     </div>
     <button v-show="showIcon" class="toggle-button" @click="togglePopup()">
       <img src="@/assets/logo.svg" alt="T" class="button-icon" />

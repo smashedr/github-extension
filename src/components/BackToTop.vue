@@ -6,7 +6,7 @@ const props = withDefaults(
     btnClass?: string
   }>(),
   {
-    btnClass: 'btn-link',
+    btnClass: 'btn-primary',
   },
 )
 
