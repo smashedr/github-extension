@@ -29,16 +29,16 @@ jobs:
 
       - name: "Build"
         if: ${{ !cancelled() }}
-        run: npm run build:all
-
-      - name: "web-ext"
-        if: ${{ !cancelled() }}
-        run: npm run lint:web-ext
+        run: npm run package
 
       #- name: "eslint"
       #  if: ${{ !cancelled() }}
       #  run: |
       #    npm run lint
+
+      - name: "web-ext"
+        if: ${{ !cancelled() }}
+        run: npm run lint:web-ext
 
       - name: "prettier"
         if: ${{ !cancelled() }}

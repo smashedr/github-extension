@@ -1,82 +1,70 @@
 <script setup lang="ts">
+import { i18n } from '#imports'
+import { onMounted, ref } from 'vue'
 import { isFirefox } from '@/utils/system.ts'
-import { onMounted } from 'vue'
+import { clickOpen } from '@/utils/extension.ts'
+import HorizontalRule from '@/components/HorizontalRule.vue'
 
-function openChromeShortcuts() {
-  chrome.tabs.update({ url: 'chrome://extensions/shortcuts' })
-}
+defineProps<{
+  hideHeading?: boolean
+  hideLink?: boolean
+  linkMt?: string
+}>()
 
-onMounted(() => {
-  setShortcuts()
+const hasCommands = ref<boolean>(!!chrome.commands)
+const commands = ref<{ description: string; shortcut: string }[]>([])
+
+const openChromeShortcuts = () => chrome.tabs.update({ url: 'chrome://extensions/shortcuts' })
+
+onMounted(async () => {
+  if (!hasCommands.value) return
+  const notSet = i18n.t('keyboard.notSet')
+  const result = await chrome.commands.getAll()
+  commands.value = result.map(({ description, name, shortcut }) => ({
+    description: description || (name === '_execute_action' ? i18n.t('cmd.executeAction') : notSet),
+    shortcut: shortcut || notSet,
+  }))
 })
-
-// NOTE: Below is ported from VanillaJS
-async function setShortcuts(selector = '#keyboard-shortcuts') {
-  console.debug('setShortcuts')
-  if (!chrome.commands) {
-    return console.debug('Skipping: chrome.commands')
-  }
-  const table = document.querySelector(selector)
-  if (!table) {
-    return console.warn(`Table not found: ${selector}`)
-  }
-  table.classList.remove('d-none')
-  const tbody = table.querySelector('tbody')
-  const source = table.querySelector('tfoot > tr')?.cloneNode(true)
-  if (!tbody || !source) {
-    return console.warn(`Source element not found!`)
-  }
-  const commands = await chrome.commands.getAll()
-  for (const command of commands) {
-    // console.debug('command:', command)
-    const row = source.cloneNode(true) as Element
-    let description = command.description
-    // Note: Chrome does not parse the description for _execute_action in manifest.json
-    if (!description && command.name === '_execute_action') {
-      description = 'Open Popup' // NOTE: Also defined in: manifest.json
-    }
-    row.querySelector('.description')!.textContent = description ?? null
-    row.querySelector('kbd')!.textContent = command.shortcut || 'Not Set'
-    tbody.appendChild(row)
-  }
-}
 </script>
 
 <template>
-  <div>
-    <table id="keyboard-shortcuts" class="table table-sm rounded table-borderless table-hover d-none">
+  <template v-if="hasCommands">
+    <HorizontalRule v-if="!hideHeading" class="my-2">{{ i18n.t('keyboard.shortcuts') }}</HorizontalRule>
+
+    <table class="table table-sm rounded table-borderless table-hover transparent-table mb-0">
       <caption class="visually-hidden">
-        Keyboard Shortcuts
+        {{
+          i18n.t('keyboard.shortcuts')
+        }}
       </caption>
       <thead class="visually-hidden">
         <tr>
-          <th>Description</th>
-          <th>Shortcut</th>
+          <th>{{ i18n.t('keyboard.description') }}</th>
+          <th>{{ i18n.t('keyboard.shortcut') }}</th>
         </tr>
       </thead>
-      <tbody></tbody>
-      <tfoot class="d-none">
-        <tr>
-          <td class="bg-transparent">
+      <tbody>
+        <tr v-for="cmd in commands">
+          <td class="ps-2 text-truncate w-100" style="max-width: 0">
             <i class="fa-regular fa-keyboard me-1"></i>
-            <span class="description"></span>
+            {{ cmd.description }}
           </td>
-          <td class="bg-transparent text-end" title="Keyboard Shortcut">
-            <kbd>Unknown</kbd>
+          <td class="text-end pe-2 text-nowrap">
+            <kbd>{{ cmd.shortcut }}</kbd>
           </td>
         </tr>
-      </tfoot>
+      </tbody>
     </table>
-    <!-- keyboard-shortcuts -->
 
-    <div class="mb-2">
-      Manage Keyboard Shortcuts:
+    <div v-if="!hideLink" :class="linkMt || `mt-2`">
+      {{ i18n.t('keyboard.manage') }}:
       <a
         v-if="isFirefox"
         class="text-decoration-none d-inline-block firefox"
         href="https://support.mozilla.org/en-US/kb/manage-extension-shortcuts-firefox"
         target="_blank"
         rel="noopener"
+        @click.prevent="clickOpen"
       >
         https://mzl.la/3Qwp5QQ
         <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i
@@ -90,12 +78,15 @@ async function setShortcuts(selector = '#keyboard-shortcuts') {
         >chrome://extensions/shortcuts</a
       >
     </div>
-  </div>
+  </template>
 </template>
 
-<style scoped>
-/* NOTE: For brite bootswatch theme */
-table {
-  border-collapse: separate;
-}
-</style>
+<!--<style scoped>-->
+<!--#table td:first-child {-->
+<!--  width: 100%;-->
+<!--  max-width: 0;-->
+<!--}-->
+<!--table {-->
+<!--  border-collapse: separate;-->
+<!--}-->
+<!--</style>-->

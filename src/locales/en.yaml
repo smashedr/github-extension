@@ -1,0 +1,118 @@
+name: GitHub Extension
+short_name: GH Extension
+description: GitHub Web Extension
+
+ui:
+  action:
+    cancel: Cancel
+    close: Close
+    go: Go
+
+    openPopup: Open Popup
+    sidePanel: Side Panel
+    extensionPanel: Extension Panel
+    extensionPage: Extension Page
+    showOptions: Show Options
+    showToast: Show Factual Toast
+
+  text:
+    options: Options
+    homePage: Home Page
+    openIssue: Open Issue
+    releaseNotes: Release Notes
+    requestFeature: Request Feature
+
+cmd:
+  # wxt.config.ts
+  executeAction: Open Popup
+  openSidePanel: Open Side Panel
+  openExtPanel: Open Extension Panel
+  openOptions: Open Options
+
+ctx:
+  # background/menus.ts
+  openPopup: Open Popup
+  openSidePanel: Open Side Panel
+  openExtPanel: Open Extension Panel
+  openOptions: Open Options
+
+# Entrypoints
+
+content:
+  # content/index.ts
+  press: Press the
+  toggle: key to toggle the icon.
+  key:
+    toggle: T
+
+options:
+  # options/App.vue
+  title: Options
+  extension: Extension Options
+  keyboard: Keyboard Shortcuts
+  copySupport: Copy Support Information
+  copySupportTip: For issue reporting.
+  copySupportMsg: Support Information Copied.
+
+permissions:
+  # permissions/App.vue
+  title: Permissions
+  reason: To demonstrate the permissions check, host permissions are required.
+
+page:
+  # page/App.vue
+  title: Page
+
+# Components
+
+keyboard:
+  # components/KeyboardShortcuts.vue
+  description: Description
+  manage: Manage Keyboard Shortcuts
+  notSet: Not Set
+  shortcut: Shortcut
+  shortcuts: Keyboard Shortcuts
+  unknown: Unknown
+
+perms:
+  # components/PermsCheck.vue
+  granted: Permissions Granted.
+  grant:
+    text: Grant Host Permissions
+    tip: This Extension Requires Host Permissions to Function
+  remove:
+    text: Remove Host Permissions
+    tip: You will no longer be able to analyze new images
+  info: More Information on Permissions
+
+theme:
+  # components/ThemeSwitch.vue
+  title: Theme Switcher
+  dark: Dark
+  light: Light
+  auto: Auto
+
+# Options
+
+option:
+  toggle:
+    siteIcon:
+      label: Site Icon
+      tip: Show Icon on Sites.
+    contextMenu:
+      label: Context Menu
+      tip: Show context menu on right click.
+    showUpdate:
+      label: Show Update
+      tip: Show update notifications.
+  input:
+    testInput:
+      label: Test Input
+      tooltip: Example Text Input.
+      placeholder: Any Text
+      help: Just a test text input.
+    testNumber:
+      label: Number
+      tooltip: Example Number Input.
+      placeholder: Minutes
+      help: Just a test text input.
