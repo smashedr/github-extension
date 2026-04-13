@@ -30,7 +30,7 @@ export default defineConfig({
 
       homepage_url: 'https://github.com/smashedr/github-extension',
       permissions: ['contextMenus', 'storage'],
-      host_permissions: ['*://*/*'],
+      // host_permissions: ['*://*/*'],
 
       commands: {
         _execute_action: {

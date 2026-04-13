@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 export default defineContentScript({
-  matches: ['*://*/*'],
+  matches: ['https://github.com/*'],
 
   main(ctx) {
     console.log(`%c ${chrome.runtime.id} - Loaded: content/index.ts`, 'color: Lime', ctx)
