@@ -4,26 +4,62 @@ interface Repository {
   url: string
 }
 
-export function getOwnerRepo(fullUrl?: string) {
+export function getOwnerRepo(fullUrl?: string): Repository | null {
   console.log('getOwnerRepo:', fullUrl)
   if (!fullUrl) return null
-  const hosts = ['github.com']
   try {
     const url = new URL(fullUrl)
-    if (!hosts.includes(url.host)) {
-      return null
-    }
-    const parts = url.pathname.replace('/', '').split('/')
-    if (parts.length < 2 || !parts[0] || !parts[1]) {
-      return null
-    }
-    return {
-      owner: parts[0],
-      name: parts[1],
-      url: `${url.protocol}//${url.host}/${parts[0]}/${parts[1]}`,
-    } as Repository
-  } catch (e) {
-    console.debug('error:', e)
+    const [owner, name] = url.pathname.split('/').filter(Boolean)
+    if (!owner || !name) return null
+    if (GITHUB_RESERVED_PATHS.has(owner.toLowerCase())) return null
+    return { owner, name, url: `${url.origin}/${owner}/${name}` }
+  } catch (error) {
+    console.log('error:', error)
     return null
   }
 }
+
+const GITHUB_RESERVED_PATHS = new Set([
+  'explore',
+  'trending',
+  'topics',
+  'collections',
+  'events',
+  'search',
+  'dashboard',
+  'notifications',
+  'issues',
+  'pulls',
+  'stars',
+  'watching',
+  'settings',
+  'login',
+  'logout',
+  'join',
+  'session',
+  'sessions',
+  'password_reset',
+  'account',
+  'new',
+  'orgs',
+  'organizations',
+  'users',
+  'teams',
+  'marketplace',
+  'sponsors',
+  'features',
+  'enterprise',
+  'pricing',
+  'security',
+  'codespaces',
+  'copilot',
+  'apps',
+  'gists',
+  'about',
+  'contact',
+  'site',
+  'home',
+  'readme',
+  '404',
+  '500',
+])

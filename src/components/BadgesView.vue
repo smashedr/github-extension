@@ -58,7 +58,7 @@ const badges = computed<Badge[]>(() => [
     </div>
     <div>
       <a
-        :href="`https://www.star-history.com/#${props.owner}/${props.repo}&type=date&legend=top-left`"
+        :href="`https://www.star-history.com/#${owner}/${repo}&type=date&legend=top-left`"
         target="_blank"
         rel="noopener"
       >
@@ -66,7 +66,7 @@ const badges = computed<Badge[]>(() => [
           id="star-history"
           alt="Star History Chart"
           width="100%"
-          :src="`https://api.star-history.com/svg?repos=${props.owner}/${props.repo}&type=date&legend=bottom-right&theme=dark`"
+          :src="`https://api.star-history.com/svg?repos=${owner}/${repo}&type=date&legend=bottom-right&theme=dark`"
         />
       </a>
     </div>
