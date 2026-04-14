@@ -93,7 +93,10 @@ onUnmounted(() => {
   <div class="popup-container">
     <div v-show="showPopup" class="popup-content">
       <BadgesView v-if="owner && repo" :owner :repo class="badges" />
-      <div v-else>No Repository Detected. This section is not finished.</div>
+      <div v-else>
+        <p>No Repository Detected. This section is not finished.</p>
+        <p>Tip: Press <b>T</b> to toggle this dialog or <b>H</b> to go Home.</p>
+      </div>
     </div>
     <button v-show="showIcon" class="toggle-button" @click="togglePopup()">
       <img src="@/assets/icon.svg" alt="T" class="button-icon" />
@@ -101,9 +104,16 @@ onUnmounted(() => {
   </div>
 </template>
 
+<!--suppress CssUnusedSymbol -->
 <style scoped>
 .badges {
   max-width: 480px;
+}
+
+:deep(div.d-flex) {
+  column-gap: 0.5rem !important;
+  row-gap: 0.25rem !important;
+  justify-content: center !important;
 }
 
 .popup-container {
@@ -122,8 +132,8 @@ onUnmounted(() => {
 }
 
 .popup-content {
-  background-color: white;
-  color: #1f2937;
+  background-color: #ffffff;
+  color: #495057;
   border-radius: 0.5rem;
   box-shadow:
     0 4px 6px -1px rgb(0 0 0 / 0.1),
@@ -136,6 +146,13 @@ onUnmounted(() => {
   padding: 0.5rem 1rem;
   margin: auto 0.5rem 0 0;
   transition: opacity 300ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  .popup-content {
+    background-color: #212529;
+    color: #dee2e6;
+  }
 }
 
 .toggle-button {
