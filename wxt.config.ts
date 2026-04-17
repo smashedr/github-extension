@@ -81,11 +81,12 @@ export default defineConfig({
       if (manifest.action) manifest.action.default_icon = manifest.icons
       if (manifest.sidebar_action) manifest.sidebar_action.default_icon = manifest.icons
       if (wxt.config.browser === 'firefox') {
-        // NOTE: This will not be stripped in future WXT versions...
+        // NOTE: content_scripts is NOT available here...
         manifest.page_action = {
           default_popup: 'popup.html',
           default_icon: manifest.icons,
-          show_matches: ['*://*/*'],
+          // show_matches: manifest.content_scripts?.[0].matches,
+          show_matches: ['https://github.com/*'],
         }
       }
     },
